@@ -1,26 +1,249 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0f172a;
+  --foreground: #e2e8f0;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  color-scheme: dark;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Custom scrollbar for webkit browsers */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1e293b;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* Redoc customizations */
+.redoc-container {
+  background: #0f172a !important;
+}
+
+/* Override Redoc styles for better integration */
+.redoc-container .menu-content {
+  background: #0f172a !important;
+}
+
+.redoc-container .api-content {
+  background: #1e293b !important;
+}
+
+/* Fix code block backgrounds */
+.redoc-container pre {
+  background: #0f172a !important;
+}
+
+.redoc-container code {
+  background: #1e293b !important;
+}
+
+/* Method badges */
+.redoc-container .http-verb {
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* Search highlight */
+.redoc-container mark {
+  background: rgba(34, 211, 238, 0.3);
+  color: inherit;
+}
+
+/* Response panel */
+.redoc-container .react-tabs__tab--selected {
+  background: #334155 !important;
+  border-color: #22d3ee !important;
+}
+
+/* Redoc layout - fixed menu, scrolling content */
+.redoc-container {
+  height: 100% !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.redoc-wrap {
+  height: 100% !important;
+  flex: 1 !important;
+  display: flex !important;
+  overflow: hidden !important;
+}
+
+/* Left menu - fixed with its own scroll */
+.redoc-wrap .menu-content {
+  position: relative !important;
+  height: 100% !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  flex-shrink: 0 !important;
+}
+
+/* Main content wrapper - scrollable */
+.redoc-wrap .api-content {
+  flex: 1 !important;
+  height: 100% !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  scroll-behavior: smooth !important;
+}
+
+/* Ensure content sections don't block scrolling */
+.redoc-wrap .api-info,
+.redoc-wrap [class*="operation-"],
+.redoc-wrap [class*="middle-panel"],
+.redoc-wrap [class*="right-panel"] {
+  height: auto !important;
+  min-height: auto !important;
+  overflow: visible !important;
+}
+
+/* Section containers should expand */
+.redoc-wrap section,
+.redoc-wrap [data-section-id] {
+  height: auto !important;
+  overflow: visible !important;
+}
+
+/* Code blocks should scroll horizontally */
+.redoc-wrap pre {
+  overflow-x: auto !important;
+  overflow-y: visible !important;
+}
+
+/* Security/Authorization badges - high contrast */
+.redoc-wrap [class*="security-"] span,
+.redoc-wrap [class*="security-"],
+.redoc-wrap [class*="SecurityRequirement"],
+.redoc-wrap [class*="ejNTPo"],
+.redoc-wrap [class*="authorization"] {
+  color: #fbbf24 !important; /* amber-400 */
+  background-color: rgba(251, 191, 36, 0.15) !important;
+  border-color: #fbbf24 !important;
+}
+
+/* Expandable section headers */
+.redoc-wrap [class*="FtowP"],
+.redoc-wrap svg[class*="sc-"] {
+  color: #94a3b8 !important; /* slate-400 */
+  fill: currentColor !important;
+}
+
+/* Scope badges (read:pets, write:pets) */
+.redoc-wrap [class*="scope"],
+.redoc-wrap [class*="Scope"] {
+  color: #4ade80 !important; /* green-400 */
+  background-color: rgba(74, 222, 128, 0.15) !important;
+  padding: 2px 6px !important;
+  border-radius: 4px !important;
+  margin: 0 2px !important;
+}
+
+/* Labels and badges */
+.redoc-wrap label,
+.redoc-wrap [class*="label"] {
+  color: #e2e8f0 !important; /* slate-200 */
+}
+
+/* Required field indicator */
+.redoc-wrap [class*="required"] {
+  color: #f87171 !important; /* red-400 */
+}
+
+/* Type labels */
+.redoc-wrap [class*="type-"],
+.redoc-wrap [class*="Type"] {
+  color: #38bdf8 !important; /* sky-400 */
+}
+
+/* Property names */
+.redoc-wrap [class*="property-name"],
+.redoc-wrap [class*="PropertyName"] {
+  color: #f1f5f9 !important; /* slate-100 */
+  font-weight: 500 !important;
+}
+
+/* Expandable arrows */
+.redoc-wrap button svg,
+.redoc-wrap [class*="expand"] svg {
+  color: #94a3b8 !important;
+}
+
+/* Tables */
+.redoc-wrap table {
+  border-color: #334155 !important; /* slate-700 */
+}
+
+.redoc-wrap th {
+  background-color: #1e293b !important; /* slate-800 */
+  color: #f1f5f9 !important; /* slate-100 */
+}
+
+.redoc-wrap td {
+  color: #e2e8f0 !important; /* slate-200 */
+  border-color: #334155 !important;
+}
+
+/* Description text */
+.redoc-wrap p,
+.redoc-wrap [class*="description"] {
+  color: #cbd5e1 !important; /* slate-300 */
+}
+
+/* Headings in content */
+.redoc-wrap h1, .redoc-wrap h2, .redoc-wrap h3, 
+.redoc-wrap h4, .redoc-wrap h5, .redoc-wrap h6 {
+  color: #f8fafc !important; /* slate-50 */
+}
+
+/* Custom focus styles */
+*:focus-visible {
+  outline: 2px solid #22d3ee;
+  outline-offset: 2px;
+}
+
+/* Loading animation */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Smooth transitions */
+.transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+/* Fix for iFrame height */
+html,
+body,
+#__next {
+  height: 100%;
+  min-height: 100%;
 }
