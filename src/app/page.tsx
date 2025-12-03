@@ -30,7 +30,7 @@ interface LoadedService extends ServiceMetadata {
 }
 
 export default function Home() {
-  const { token } = useAuth();
+  const { token, baseUrl } = useAuth();
   const [services, setServices] = useState<ServiceMetadata[]>([]);
   const [grouped, setGrouped] = useState<Record<string, ServiceMetadata[]>>({});
   const [sourceLabels, setSourceLabels] = useState<string[]>([]);
@@ -309,9 +309,9 @@ export default function Home() {
               </div>
             </div>
           ) : loadedSchema ? (
-            // Key prop forces Elements to unmount/remount cleanly when switching APIs
+            // Key prop forces Elements to unmount/remount cleanly when switching APIs or base URL changes
             <ApiDocViewer 
-              key={`${selectedService.blueprintId}-${selectedService.service.identifier}`}
+              key={`${selectedService.blueprintId}-${selectedService.service.identifier}-${baseUrl || 'default'}`}
               spec={loadedSchema}
               specUrl={selectedService.specUrl}
             />

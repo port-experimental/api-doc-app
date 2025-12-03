@@ -13,6 +13,7 @@
 import { useEffect, useState, useMemo } from 'react';
 // Note: Stoplight Elements uses react-query v3, not @tanstack/react-query v5
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { useAuth } from '@/context/AuthContext';
 import LoadingState, { ErrorState } from './LoadingState';
 
 interface ApiDocViewerProps {
@@ -32,10 +33,19 @@ interface ElementsAPIProps {
   tryItCorsProxy?: string;
 }
 
+// OpenAPI spec type (simplified for our needs)
+interface OpenAPISpec {
+  openapi?: string;
+  swagger?: string;
+  servers?: Array<{ url: string; description?: string }>;
+  [key: string]: unknown;
+}
+
 export function ApiDocViewer({ specUrl, spec, className = '' }: ApiDocViewerProps) {
   const [ElementsAPI, setElementsAPI] = useState<React.ComponentType<ElementsAPIProps> | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { baseUrl } = useAuth();
 
   // Create a stable QueryClient instance for React Query v3 (required by Stoplight Elements)
   const queryClient = useMemo(() => new QueryClient({
@@ -46,6 +56,22 @@ export function ApiDocViewer({ specUrl, spec, className = '' }: ApiDocViewerProp
       },
     },
   }), []);
+
+  // Modify the spec to include custom base URL if provided
+  const modifiedSpec = useMemo(() => {
+    if (!spec || !baseUrl) return spec;
+
+    const specObj = spec as OpenAPISpec;
+    
+    // Create a new spec with the custom base URL prepended to servers
+    return {
+      ...specObj,
+      servers: [
+        { url: baseUrl, description: 'Custom Base URL' },
+        ...(specObj.servers || []),
+      ],
+    };
+  }, [spec, baseUrl]);
 
   useEffect(() => {
     // Dynamically import Stoplight Elements to avoid SSR issues
@@ -108,8 +134,9 @@ export function ApiDocViewer({ specUrl, spec, className = '' }: ApiDocViewerProp
   };
 
   // Use embedded spec if available, otherwise use URL
-  if (spec) {
-    elementsProps.apiDescriptionDocument = JSON.stringify(spec);
+  // When we have a custom base URL, we need to use the modified spec
+  if (modifiedSpec) {
+    elementsProps.apiDescriptionDocument = JSON.stringify(modifiedSpec);
   } else if (validSpecUrl) {
     elementsProps.apiDescriptionUrl = validSpecUrl;
   }
