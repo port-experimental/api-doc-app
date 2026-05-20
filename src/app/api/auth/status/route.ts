@@ -11,6 +11,17 @@ import { validateConfig } from '@/lib/config';
 
 export async function GET() {
   const configValidation = validateConfig();
+
+  // Proactively obtain a token when configured so status reflects actual auth state,
+  // not just cold-start cache (getToken() is a no-op if a valid token is already cached).
+  if (configValidation.valid) {
+    try {
+      await tokenManager.getToken();
+    } catch {
+      // Token fetch failed — getStatus() will reflect this
+    }
+  }
+
   const tokenStatus = tokenManager.getStatus();
 
   return NextResponse.json({

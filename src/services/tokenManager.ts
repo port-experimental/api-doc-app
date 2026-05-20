@@ -79,13 +79,16 @@ class TokenManager {
    */
   private async fetchTokenWithClientCredentials(): Promise<string> {
     const baseUrl = getPortApiUrl();
-    
+    // Read directly from process.env at call time to avoid stale module-level config
+    const clientId = process.env.PORT_CLIENT_ID || config.port.clientId;
+    const clientSecret = process.env.PORT_CLIENT_SECRET || config.port.clientSecret;
+
     try {
       const response = await axios.post(
         `${baseUrl}/v1/auth/access_token`,
         {
-          clientId: config.port.clientId,
-          clientSecret: config.port.clientSecret,
+          clientId,
+          clientSecret,
         },
         {
           headers: {
